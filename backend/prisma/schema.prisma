@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Rule {
+  id                        String  @id @default(cuid())
+  title                     String? @db.Text
+  rule                      String @db.Text
+
+  metadata                  RuleMetadata[]
+
+  createdAt                 DateTime @default(now())
+}
+
+model RuleMetadata {
+  id                        String @id @default(cuid())
+  attribute                 String
+  value                     String
+
+  ruleId                    String
+  rule                      Rule @relation(fields: [ruleId], references: [id])
+
+  createdAt                 DateTime @default(now())
+}
